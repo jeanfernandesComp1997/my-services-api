@@ -9,7 +9,14 @@ export class UserService implements IUserService {
 
     async addUser(obj: any): Promise<User> {
         const user = new User(obj);
-        user.validate();
+
+        if (await this.userRepository.userExist(user.email))
+            throw new Error('Email already in use!');
+
+        if (user._errors.length > 0)
+            throw new Error(user._errors.toString());
+
+        delete user._errors;
 
         try {
             return await this.userRepository.saveUser(user);

@@ -1,5 +1,5 @@
 import { userController } from './../controllers/';
-import { Router } from "express";
+import { request, response, Router } from "express";
 const userRoute = Router();
 
 userRoute.get('/', async (request, response) => {
@@ -8,6 +8,14 @@ userRoute.get('/', async (request, response) => {
 
 userRoute.post('/', async (request, response) => {
     return await userController.addUser(request, response);
+});
+
+userRoute.post('/login', async (request, response) => {
+
+});
+
+userRoute.put('/', async (request, response) => {
+
 });
 
 export { userRoute };

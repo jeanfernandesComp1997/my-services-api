@@ -1,17 +1,28 @@
-export class User {
-    id: number;
+import { EntityBase } from './EntityBase';
+
+export class User extends EntityBase {
     name: string;
-    age: number;
+    email: string;
+    password: string;
+    document: string;
+    corporateDocument: string;
+    corporateName: string;
 
     constructor(props) {
+        super(props.id ? props.id : null);
         Object.assign(this, props);
+
+        this.validate();
     }
 
     validate() {
         if (this.name === '' || this.name === null || this.name === undefined)
-            throw new Error('Name is required!');
+            this._errors.push('Name is required!');
 
-        if (isNaN(this.age) || this.age === null || this.age === undefined || !this.age)
-            throw new Error('Age is required!');
+        if (this.email === '' || this.email === null || this.email === undefined)
+            this._errors.push('Email is required!');
+
+        if (this.password === '' || this.password === null || this.password === undefined)
+            this._errors.push('Password is required!');
     }
 }
