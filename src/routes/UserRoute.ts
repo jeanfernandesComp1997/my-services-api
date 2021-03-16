@@ -10,12 +10,8 @@ userRoute.post('/', async (request, response) => {
     return await userController.addUser(request, response);
 });
 
-userRoute.post('/login', async (request, response) => {
-
-});
-
-userRoute.put('/', async (request, response) => {
-
+userRoute.post('/addaddress', async (request, response) => {
+    return await userController.addAddress(request, response);
 });
 
 export { userRoute };

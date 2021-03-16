@@ -31,4 +31,16 @@ export class UserController {
             });
         }
     }
+
+    async addAddress(request: Request, response: Response): Promise<Response> {
+        try {
+            const user = await this.userService.addAddress(request.body);
+
+            return response.status(201).send(user);
+        } catch (error) {
+            return response.status(400).json({
+                message: error.message || 'Unexpected error.'
+            });
+        }
+    }
 }

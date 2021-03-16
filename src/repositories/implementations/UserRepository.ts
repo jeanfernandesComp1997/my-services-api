@@ -1,4 +1,6 @@
+import { UserAddressDTO } from '../../DTOS/userDtos/UserAddressDTO';
 import { Knex } from 'knex';
+import { Address } from '../../entities/Address';
 import { context } from '../database/DataContext';
 import { User } from './../../entities/User';
 import { IUserRepository } from './../IUserRepository';
@@ -20,10 +22,11 @@ export class UserRepository implements IUserRepository {
         }
     }
 
-    async findAll(): Promise<Array<User>> {
+    async findAll(): Promise<Array<UserAddressDTO>> {
         try {
-            const result = await this.dbContext.select().table('user');
-            return result.map(user => new User(user));
+            const result = await this.dbContext.from('user').innerJoin('address', 'user.id', 'address.userId');
+
+            return result.map(user => new UserAddressDTO(user));
         } catch (error) {
             throw error;
         }
@@ -34,6 +37,16 @@ export class UserRepository implements IUserRepository {
             const result = await this.dbContext('user').where('email', email);
 
             return result.length > 0 ? new User(result[0]) : null;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async saveAddress(address: Address): Promise<Address> {
+        try {
+            await this.dbContext.insert(address).into('address');
+
+            return address;
         } catch (error) {
             throw error;
         }
