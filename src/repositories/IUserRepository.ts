@@ -7,4 +7,5 @@ export interface IUserRepository {
     saveUser(user): Promise<User>;
     userExist(email: string): Promise<User>;
     saveAddress(address: Address): Promise<Address>;
+    getUserByEmailAndPassword(email: string, password: string): Promise<User>;
 }

@@ -11,7 +11,7 @@ export class UserAddressDTO {
     address: Address;
 
     constructor(props) {
-        this.id = props.id;
+        this.id = props.userId;
         this.name = props.name;
         this.email = props.email;
         this.password = props.password;
@@ -19,6 +19,7 @@ export class UserAddressDTO {
         this.corporateName = props.corporateName;
 
         this.address = new Address({
+            id: props.id,
             userId: props.userId,
             country: props.country,
             state: props.state,

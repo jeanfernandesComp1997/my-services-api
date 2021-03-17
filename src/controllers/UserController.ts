@@ -20,6 +20,18 @@ export class UserController {
         }
     }
 
+    async login(request: Request, response: Response): Promise<Response> {
+        try {
+            const result = await this.userService.login(request.body);
+
+            return response.status(201).send(result);
+        } catch (error) {
+            return response.status(400).json({
+                message: error.message || 'Unexpected error.'
+            });
+        }
+    }
+
     async getAllUsers(request: Request, response: Response): Promise<Response> {
         try {
             const users = await this.userRepository.findAll();

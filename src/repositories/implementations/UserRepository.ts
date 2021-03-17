@@ -42,6 +42,16 @@ export class UserRepository implements IUserRepository {
         }
     }
 
+    async getUserByEmailAndPassword(email: string, password: string): Promise<User> {
+        try {
+            const result = await this.dbContext('user').where('email', email).where('password', password);
+
+            return result.length > 0 ? new User(result[0]) : null;
+        } catch (error) {
+            throw error;
+        }
+    }
+
     async saveAddress(address: Address): Promise<Address> {
         try {
             await this.dbContext.insert(address).into('address');
