@@ -5,7 +5,7 @@ const config = {
     connection: {
         host: 'localhost',
         user: 'root',
-        password: 'jcfm123987',
+        password: '123',
         database: 'my_service_db'
     },
     pool: {
