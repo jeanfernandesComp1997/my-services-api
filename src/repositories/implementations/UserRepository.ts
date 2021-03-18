@@ -61,4 +61,29 @@ export class UserRepository implements IUserRepository {
             throw error;
         }
     }
+
+    async updatePasswordResetToken(email: string, token: string, expiresIn: Date): Promise<void> {
+        try {
+            await this.dbContext('user').where('email', email)
+                .update({
+                    passwordResetToken: token,
+                    passwordResetExpires: expiresIn
+                });
+
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async updatePassword(email: string, password: string): Promise<void> {
+        try {
+            await this.dbContext('user').where('email', email)
+                .update({
+                    password: password
+                });
+
+        } catch (error) {
+            throw error;
+        }
+    }
 }

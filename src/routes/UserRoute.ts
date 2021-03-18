@@ -20,4 +20,12 @@ userRoute.post('/addaddress', verifyJwt, async (request, response) => {
     return await userController.addAddress(request, response);
 });
 
+userRoute.post('/forgotpassword', async (request, response) => {
+    return await userController.forgotPassword(request, response);
+});
+
+userRoute.post('/resetpassword', async (request, response) => {
+    return await userController.resetPassword(request, response);
+});
+
 export { userRoute };

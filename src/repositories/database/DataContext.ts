@@ -1,12 +1,13 @@
 import { knex } from 'knex';
+import 'dotenv/config'
 
 const config = {
     client: 'mysql2',
     connection: {
-        host: 'localhost',
-        user: 'root',
-        password: '123',
-        database: 'my_service_db'
+        host: process.env.DB_HOST,
+        user: process.env.DB_USER,
+        password: process.env.DB_PASSWORD,
+        database: process.env.DATABASE
     },
     pool: {
         min: 2,

@@ -1,13 +1,16 @@
 import * as jwt from 'jsonwebtoken';
+import * as crypto from 'crypto';
 import { Address } from './../../entities/Address';
 import { User } from './../../entities/User';
 import { IUserRepository } from '../../repositories/IUserRepository';
 import { IUserService } from './../IUserService';
-require('dotenv').config();
+import { IMailProvider } from '../../providers/IMailProvider';
+import 'dotenv/config'
 
 export class UserService implements IUserService {
     constructor(
         private userRepository: IUserRepository,
+        private mailProvider: IMailProvider
     ) { }
 
     async addUser(obj: any): Promise<User> {
@@ -69,5 +72,62 @@ export class UserService implements IUserService {
         } catch (error) {
             throw error;
         }
+    }
+
+    async forgotPassword(email: string): Promise<any> {
+        const user = await this.userRepository.userExist(email);
+
+        if (!user)
+            throw new Error('Invalid user email!');
+
+        const token = crypto.randomBytes(20).toString('hex');
+
+        const now = new Date();
+        now.setHours(now.getHours() + 1);
+
+        try {
+            await this.userRepository.updatePasswordResetToken(user.email, token, now);
+        } catch (error) {
+            throw error;
+        }
+
+        await this.mailProvider.sendMail({
+            to: {
+                name: 'MyServiceAPI',
+                email: 'noreply@myservice.com',
+            },
+            from: {
+                name: user.name,
+                email: user.email,
+            },
+            subject: 'Recuperação de senha',
+            body: `<p>Olá, use o seguinte token para alterar sua senha: ${token}</p>`
+        });
+
+        return {
+            success: true,
+            message: `Email successfully sent to ${user.email}`
+        };
+    }
+
+    async resetPassword(email: string, password: string, token: string): Promise<any> {
+        const user = await this.userRepository.userExist(email);
+
+        if (!user)
+            throw new Error('Invalid user email!');
+
+        const now = new Date();
+
+        if (user.passwordResetToken === token && now < new Date(user.passwordResetExpires)) {
+            await this.userRepository.updatePassword(user.email, password);
+            await this.userRepository.updatePasswordResetToken(user.email, null, null);
+        }
+        else
+            throw new Error('Invalid Token!');
+
+        return {
+            success: true,
+            message: `Password changed successfully!`
+        };
     }
 }

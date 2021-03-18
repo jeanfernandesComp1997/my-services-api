@@ -8,4 +8,6 @@ export interface IUserRepository {
     userExist(email: string): Promise<User>;
     saveAddress(address: Address): Promise<Address>;
     getUserByEmailAndPassword(email: string, password: string): Promise<User>;
+    updatePasswordResetToken(email: string, token: string, expiresIn: Date): Promise<void>;
+    updatePassword(email: string, password: string): Promise<void>;
 }

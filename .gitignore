@@ -5,3 +5,6 @@ vscode
 
 # build directories
 .build
+
+#files
+.env

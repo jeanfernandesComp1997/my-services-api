@@ -7,6 +7,8 @@ export class User extends EntityBase {
     document: string;
     corporateDocument: string;
     corporateName: string;
+    passwordResetToken: string;
+    passwordResetExpires: Date;
 
     constructor(props) {
         super(props.id ? props.id : null);
