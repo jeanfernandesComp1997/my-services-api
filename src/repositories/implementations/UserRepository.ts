@@ -1,4 +1,4 @@
-import { UserAddressDTO } from '../../DTOS/userDtos/UserAddressDTO';
+import { UserAddressDTO } from '../../dto/userDtos/UserAddressDTO';
 import { Knex } from 'knex';
 import { Address } from '../../entities/Address';
 import { context } from '../database/DataContext';
@@ -17,16 +17,6 @@ export class UserRepository implements IUserRepository {
             await this.dbContext.insert(user).into('user');
 
             return user;
-        } catch (error) {
-            throw error;
-        }
-    }
-
-    async findAll(): Promise<Array<UserAddressDTO>> {
-        try {
-            const result = await this.dbContext.from('user').innerJoin('address', 'user.id', 'address.userId');
-
-            return result.map(user => new UserAddressDTO(user));
         } catch (error) {
             throw error;
         }
@@ -52,16 +42,6 @@ export class UserRepository implements IUserRepository {
         }
     }
 
-    async saveAddress(address: Address): Promise<Address> {
-        try {
-            await this.dbContext.insert(address).into('address');
-
-            return address;
-        } catch (error) {
-            throw error;
-        }
-    }
-
     async updatePasswordResetToken(email: string, token: string, expiresIn: Date): Promise<void> {
         try {
             await this.dbContext('user').where('email', email)
@@ -82,6 +62,26 @@ export class UserRepository implements IUserRepository {
                     password: password
                 });
 
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async saveAddress(address: Address): Promise<Address> {
+        try {
+            await this.dbContext.insert(address).into('address');
+
+            return address;
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async findAll(): Promise<Array<UserAddressDTO>> {
+        try {
+            const result = await this.dbContext.from('user').innerJoin('address', 'user.id', 'address.userId');
+
+            return result.map(user => new UserAddressDTO(user));
         } catch (error) {
             throw error;
         }

@@ -1,10 +1,11 @@
+import { GenericServiceResponse } from './Responses/GenericServiceResponse';
 import { Address } from '../entities/Address';
 import { User } from './../entities/User';
 
 export interface IUserService {
-    addUser(user: User): Promise<User>;
-    addAddress(address: Address): Promise<Address>;
-    login(credentials): Promise<any>;
-    forgotPassword(email: string): Promise<any>;
-    resetPassword(email: string, password: string, token: string): Promise<any>;
+    addUser(user: User): Promise<GenericServiceResponse>;
+    login(credentials): Promise<GenericServiceResponse>;
+    forgotPassword(email: string): Promise<GenericServiceResponse>;
+    resetPassword(email: string, password: string, token: string): Promise<GenericServiceResponse>;
+    addAddress(address: Address): Promise<GenericServiceResponse>;
 }
