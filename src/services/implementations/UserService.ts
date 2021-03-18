@@ -1,4 +1,4 @@
-import { GenericServiceResponse } from './../Responses/GenericServiceResponse';
+import { GenericServiceResponse } from './../responses/GenericServiceResponse';
 import * as jwt from 'jsonwebtoken';
 import * as crypto from 'crypto';
 import { Address } from './../../entities/Address';

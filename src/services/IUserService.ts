@@ -1,4 +1,4 @@
-import { GenericServiceResponse } from './Responses/GenericServiceResponse';
+import { GenericServiceResponse } from './responses/GenericServiceResponse';
 import { Address } from '../entities/Address';
 import { User } from './../entities/User';
 
