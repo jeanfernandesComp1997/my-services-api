@@ -1,3 +1,4 @@
+import { RepositoryExceptions } from './../exceptions/RepositoryException';
 import { UserAddressDTO } from '../../dto/userDtos/UserAddressDTO';
 import { Knex } from 'knex';
 import { Address } from '../../entities/Address';
@@ -18,7 +19,7 @@ export class UserRepository implements IUserRepository {
 
             return user;
         } catch (error) {
-            throw error;
+            throw new RepositoryExceptions(error);
         }
     }
 
@@ -28,7 +29,7 @@ export class UserRepository implements IUserRepository {
 
             return result.length > 0 ? new User(result[0]) : null;
         } catch (error) {
-            throw error;
+            throw new RepositoryExceptions(error);
         }
     }
 
@@ -38,7 +39,7 @@ export class UserRepository implements IUserRepository {
 
             return result.length > 0 ? new User(result[0]) : null;
         } catch (error) {
-            throw error;
+            throw new RepositoryExceptions(error);
         }
     }
 
@@ -51,7 +52,7 @@ export class UserRepository implements IUserRepository {
                 });
 
         } catch (error) {
-            throw error;
+            throw new RepositoryExceptions(error);
         }
     }
 
@@ -63,7 +64,7 @@ export class UserRepository implements IUserRepository {
                 });
 
         } catch (error) {
-            throw error;
+            throw new RepositoryExceptions(error);
         }
     }
 
@@ -73,7 +74,7 @@ export class UserRepository implements IUserRepository {
 
             return address;
         } catch (error) {
-            throw error;
+            throw new RepositoryExceptions(error);
         }
     }
 
@@ -83,7 +84,7 @@ export class UserRepository implements IUserRepository {
 
             return result.map(user => new UserAddressDTO(user));
         } catch (error) {
-            throw error;
+            throw new RepositoryExceptions(error);
         }
     }
 }

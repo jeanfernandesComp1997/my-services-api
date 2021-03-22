@@ -1,4 +1,4 @@
-import { verifyJwt } from './../auth/AuthService';
+import { verifyJwt } from '../middlewares/AuthService';
 import { userController } from './../controllers/';
 import { Router } from "express";
 

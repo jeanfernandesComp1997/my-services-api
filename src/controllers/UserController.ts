@@ -12,13 +12,13 @@ export class UserController {
         try {
             const result = await this.userService.addUser(request.body);
 
-            if (result?.success === true)
-                return response.status(201).send(result);
+            if (result.isSuccess)
+                return response.status(201).send(result.getValue());
             else
-                return response.status(400).send(result);
+                return response.status(400).send(result.error);
         } catch (error) {
             return response.status(400).json({
-                message: error.message || 'Unexpected error.'
+                message: error.name || 'Unexpected error.'
             });
         }
     }
@@ -27,13 +27,13 @@ export class UserController {
         try {
             const result = await this.userService.login(request.body);
 
-            if (result?.success === true)
-                return response.status(200).send(result);
+            if (result.isSuccess)
+                return response.status(200).send(result.getValue());
             else
-                return response.status(400).send(result);
+                return response.status(400).send(result.error);
         } catch (error) {
             return response.status(400).json({
-                message: error.message || 'Unexpected error.'
+                message: error.name || 'Unexpected error.'
             });
         }
     }
@@ -44,13 +44,13 @@ export class UserController {
 
             const result = await this.userService.forgotPassword(email);
 
-            if (result?.success === true)
-                return response.status(200).send(result);
+            if (result.isSuccess)
+                return response.status(200).send(result.getValue());
             else
-                return response.status(400).send(result);
+                return response.status(400).send(result.error);
         } catch (error) {
             return response.status(400).json({
-                message: error.message || 'Unexpected error.'
+                message: error.name || 'Unexpected error.'
             });
         }
     }
@@ -61,13 +61,13 @@ export class UserController {
 
             const result = await this.userService.resetPassword(email, newPassword, token);
 
-            if (result?.success === true)
-                return response.status(200).send(result);
+            if (result.isSuccess)
+                return response.status(200).send(result.getValue());
             else
-                return response.status(400).send(result);
+                return response.status(400).send(result.error);
         } catch (error) {
             return response.status(400).json({
-                message: error.message || 'Unexpected error.'
+                message: error.name || 'Unexpected error.'
             });
         }
     }
@@ -76,13 +76,13 @@ export class UserController {
         try {
             const result = await this.userService.addAddress(request.body);
 
-            if (result?.success === true)
-                return response.status(201).send(result);
+            if (result.isSuccess)
+                return response.status(201).send(result.getValue());
             else
-                return response.status(400).send(result);
+                return response.status(400).send(result.error);
         } catch (error) {
             return response.status(400).json({
-                message: error.message || 'Unexpected error.'
+                message: error.name || 'Unexpected error.'
             });
         }
     }
@@ -94,7 +94,7 @@ export class UserController {
             return response.status(200).send(users);
         } catch (error) {
             return response.status(400).json({
-                message: error.message || 'Unexpected error.'
+                message: error.name || 'Unexpected error.'
             });
         }
     }

@@ -1,4 +1,5 @@
-import { GenericServiceResponse } from './../responses/GenericServiceResponse';
+import { Credentials } from './../../entities/Credentials';
+import { Result } from './../result/Result';
 import * as jwt from 'jsonwebtoken';
 import * as crypto from 'crypto';
 import { Address } from './../../entities/Address';
@@ -14,69 +15,62 @@ export class UserService implements IUserService {
         private mailProvider: IMailProvider
     ) { }
 
-    async addUser(obj: any): Promise<GenericServiceResponse> {
+    async addUser(obj: any): Promise<Result<User>> {
         const user = new User(obj);
 
         if (await this.userRepository.userExist(user.email))
-            return new GenericServiceResponse(false, 'Email already in use!', null);
+            return Result.fail<User>('Email already in use!');
 
         if (user._errors.length > 0)
-            return new GenericServiceResponse(false, user._errors.toString(), null);
+            return Result.fail<User>(user._errors.toString());
 
         delete user._errors;
 
-        try {
-            const result = await this.userRepository.saveUser(user);
-            return new GenericServiceResponse(true, 'User successfully created', result);
-        } catch (error) {
-            return new GenericServiceResponse(false, 'Error creating user', null);
-        }
+        const result = await this.userRepository.saveUser(user);
+
+        return Result.ok<User>(result);
     }
 
-    async login(credentials: any): Promise<GenericServiceResponse> {
+    async login(credentials: any): Promise<Result<Credentials>> {
         const { email, password } = credentials;
 
         if (!email || !password)
-            return new GenericServiceResponse(false, 'Email and Password are required.', null);
+            return Result.fail<Credentials>('Email and Password are required.');
 
         const user = await this.userRepository.userExist(email);
 
         if (!user)
-            return new GenericServiceResponse(false, 'Sorry, this email is invalid.', null);
+            return Result.fail<Credentials>('Sorry, this email is invalid.');
 
         if (user && user.password === password) {
             const accesToken = await jwt.sign({ email: user.email }, process.env.SECRET, {
                 expiresIn: 43200
             });
 
-            return new GenericServiceResponse(true, 'Login success', {
+            return Result.ok<Credentials>(new Credentials({
                 token: accesToken,
                 expiresIn: "43200 ms"
-            });
+            }))
         }
         else
-            return new GenericServiceResponse(false, 'Incorrect password!', null);
+            return Result.fail<Credentials>('Incorrect password!');
     }
 
-    async forgotPassword(email: string): Promise<GenericServiceResponse> {
+    async forgotPassword(email: string): Promise<Result<any>> {
         if (!email)
-            return new GenericServiceResponse(false, 'Email is required!', null);
+            return Result.fail<any>('Email is required!');
 
         const user = await this.userRepository.userExist(email);
 
         if (!user)
-            return new GenericServiceResponse(false, 'Invalid user email!', null);
+            return Result.fail<any>('Invalid user email!');
 
         const token = crypto.randomBytes(20).toString('hex');
 
         const now = new Date();
         now.setHours(now.getHours() + 1);
 
-        try {
-            await this.userRepository.updatePasswordResetToken(user.email, token, now);
-        } catch (error) {
-            return new GenericServiceResponse(false, 'Error get reset token password!', null);
-        }
+        await this.userRepository.updatePasswordResetToken(user.email, token, now);
 
         try {
             await this.mailProvider.sendMail({
@@ -92,20 +86,20 @@ export class UserService implements IUserService {
                 body: `<p>Olá, use o seguinte token para alterar sua senha: ${token}</p>`
             });
         } catch (error) {
-            return new GenericServiceResponse(false, 'Error send email with reset token!', null);
+            return Result.fail<any>('Error send email with reset token!');
         }
 
-        return new GenericServiceResponse(true, `Email successfully sent to ${user.email}`, null);
+        return Result.ok<any>(`Email successfully sent to ${user.email}`);
     }
 
-    async resetPassword(email: string, password: string, token: string): Promise<GenericServiceResponse> {
+    async resetPassword(email: string, password: string, token: string): Promise<Result<any>> {
         if (!email || !password || !token)
-            return new GenericServiceResponse(false, 'Email, password and token are required', null);
+            return Result.fail<any>('Email, password and token are required.');
 
         const user = await this.userRepository.userExist(email);
 
         if (!user)
-            return new GenericServiceResponse(false, 'Invalid user email!', null);
+            return Result.fail<any>('Invalid user email!');
 
         const now = new Date();
 
@@ -114,27 +108,24 @@ export class UserService implements IUserService {
             await this.userRepository.updatePasswordResetToken(user.email, null, null);
         }
         else
-            return new GenericServiceResponse(false, 'Invalid Token!', null);
+            return Result.fail<any>('Invalid Token!');
 
-        return new GenericServiceResponse(true, 'Password changed successfully!', null);
+        return Result.ok<any>('Password changed successfully!');
     }
 
-    async addAddress(obj: any): Promise<GenericServiceResponse> {
+    async addAddress(obj: any): Promise<Result<Address>> {
         const address = new Address(obj);
 
         if (await this.userRepository.userExist(address.userId))
-            return new GenericServiceResponse(false, 'UserId invalid invalid!', null);
+            return Result.fail<Address>('UserId invalid invalid!');
 
         if (address._errors.length > 0)
-            return new GenericServiceResponse(false, address._errors.toString(), null);
+            return Result.fail<Address>(address._errors.toString());
 
         delete address._errors;
 
-        try {
-            const result = await this.userRepository.saveAddress(address);
-            return new GenericServiceResponse(true, 'Address add successfully!', result);
-        } catch (error) {
-            return new GenericServiceResponse(false, 'Error add address.', null);
-        }
+        const result = await this.userRepository.saveAddress(address);
+
+        return Result.ok<Address>(result);
     }
 }
