@@ -6,7 +6,7 @@
         "forceConsistentCasingInFileNames": true, /* Disallow inconsistently-cased references to the same file. */
         "allowJs": true,
         "outDir": "./out",
-        "rootDir": "./src",
+        "rootDir": "./",
         "sourceMap": true,
         "esModuleInterop": true,
         "noEmitOnError": true,

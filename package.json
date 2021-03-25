@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "ts-node ./src/server.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --no-cache"
   },
   "keywords": [],
   "author": "",
@@ -24,7 +24,10 @@
   },
   "devDependencies": {
     "@types/express": "^4.17.11",
+    "@types/jest": "^26.0.21",
     "@types/jsonwebtoken": "^8.5.1",
-    "@types/nodemailer": "^6.4.1"
+    "@types/nodemailer": "^6.4.1",
+    "jest": "^26.6.3",
+    "ts-jest": "^26.5.4"
   }
 }
