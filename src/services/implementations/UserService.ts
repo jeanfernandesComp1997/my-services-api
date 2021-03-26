@@ -1,3 +1,4 @@
+import { encrypt, decrypt } from './../../middlewares/Crypt';
 import { Credentials } from './../../entities/Credentials';
 import { Result } from './../result/Result';
 import * as jwt from 'jsonwebtoken';
@@ -26,6 +27,8 @@ export class UserService implements IUserService {
 
         delete user._errors;
 
+        user.password = JSON.stringify(encrypt(user.password));
+
         const result = await this.userRepository.saveUser(user);
 
         return Result.ok<User>(result);
@@ -42,7 +45,9 @@ export class UserService implements IUserService {
         if (!user)
             return Result.fail<Credentials>('Sorry, this email is invalid.');
 
-        if (user && user.password === password) {
+        const userPassword = decrypt(JSON.parse(user.password));
+
+        if (user && userPassword === password) {
             const accesToken = await jwt.sign({ email: user.email }, process.env.SECRET, {
                 expiresIn: 43200
             });
@@ -89,7 +94,7 @@ export class UserService implements IUserService {
             return Result.fail<any>('Error send email with reset token!');
         }
 
-        return Result.ok<any>(`Email successfully sent to ${user.email}`);
+        return Result.ok<any>({ message: `Email successfully sent to ${user.email}` });
     }
 
     async resetPassword(email: string, password: string, token: string): Promise<Result<any>> {
@@ -104,13 +109,13 @@ export class UserService implements IUserService {
         const now = new Date();
 
         if (user.passwordResetToken === token && now < new Date(user.passwordResetExpires)) {
-            await this.userRepository.updatePassword(user.email, password);
+            await this.userRepository.updatePassword(user.email, JSON.stringify(encrypt(password)));
             await this.userRepository.updatePasswordResetToken(user.email, null, null);
         }
         else
             return Result.fail<any>('Invalid Token!');
 
-        return Result.ok<any>('Password changed successfully!');
+        return Result.ok<any>({ message: 'Password changed successfully!' });
     }
 
     async addAddress(obj: any): Promise<Result<Address>> {

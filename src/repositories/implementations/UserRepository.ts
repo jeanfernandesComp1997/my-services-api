@@ -72,7 +72,7 @@ export class UserRepository implements IUserRepository {
         try {
             await this.dbContext.insert(address).into('address');
 
-            return address;
+            return new Address(address);
         } catch (error) {
             throw new RepositoryExceptions(error);
         }
@@ -80,7 +80,7 @@ export class UserRepository implements IUserRepository {
 
     async findAll(): Promise<Array<UserAddressDTO>> {
         try {
-            const result = await this.dbContext.from('user').innerJoin('address', 'user.id', 'address.userId');
+            const result = await this.dbContext.from('user').leftJoin('address', 'user.id', 'address.userId');
 
             return result.map(user => new UserAddressDTO(user));
         } catch (error) {
