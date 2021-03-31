@@ -19,7 +19,7 @@ describe('User service testes', () => {
             corporateName: ''
         };
 
-        const expectedResult = new User(request);
+        const expectedResult = User.createUser(request).getValue();
 
         jest.spyOn(UserRepository.prototype, 'userExist').mockResolvedValue(null);
         jest.spyOn(UserRepository.prototype, 'saveUser').mockResolvedValue(expectedResult);
@@ -60,7 +60,7 @@ describe('User service testes', () => {
             corporateName: ''
         };
 
-        jest.spyOn(UserRepository.prototype, 'userExist').mockResolvedValue(new User(request));
+        jest.spyOn(UserRepository.prototype, 'userExist').mockResolvedValue(User.createUser(request).getValue());
 
         const result = await userService.addUser(request);
 
@@ -75,14 +75,14 @@ describe('User service testes', () => {
             password: '123456'
         };
 
-        jest.spyOn(UserRepository.prototype, 'userExist').mockResolvedValue(new User({
+        jest.spyOn(UserRepository.prototype, 'userExist').mockResolvedValue(User.createUser({
             name: 'jean fernandes',
             email: 'jeanfernandes10@hotmail.com',
             password: '{\"iv\":\"68f1d296139d4218edced14f1e38ef42\",\"content\":\"4927240d9df4\"}',
             document: '',
             corporateDocument: '',
             corporateName: ''
-        }));
+        }).getValue());
 
         const result = await userService.login(credentials);
 
@@ -97,14 +97,14 @@ describe('User service testes', () => {
             password: '123'
         };
 
-        jest.spyOn(UserRepository.prototype, 'userExist').mockResolvedValue(new User({
+        jest.spyOn(UserRepository.prototype, 'userExist').mockResolvedValue(User.createUser({
             name: 'jean fernandes',
             email: 'jeanfernandes10@hotmail.com',
             password: '{\"iv\":\"68f1d296139d4218edced14f1e38ef42\",\"content\":\"4927240d9df4\"}',
             document: '',
             corporateDocument: '',
             corporateName: ''
-        }));
+        }).getValue());
 
         const result = await userService.login(credentials);
 
@@ -118,17 +118,17 @@ describe('User service testes', () => {
             email: 'jeanfernandes10@hotmail.com'
         };
 
-        jest.spyOn(UserRepository.prototype, 'userExist').mockResolvedValue(new User({
+        jest.spyOn(UserRepository.prototype, 'userExist').mockResolvedValue(User.createUser({
             name: 'jean fernandes',
             email: 'jeanfernandes10@hotmail.com',
             password: '{\"iv\":\"68f1d296139d4218edced14f1e38ef42\",\"content\":\"4927240d9df4\"}',
             document: '',
             corporateDocument: '',
             corporateName: ''
-        }));
+        }).getValue());
 
         const result = await userService.login(credentials);
-        
+
         jest.clearAllMocks();
 
         expect(result.isSuccess).toEqual(false);
@@ -143,7 +143,7 @@ describe('User service testes', () => {
         jest.spyOn(UserRepository.prototype, 'userExist').mockResolvedValue(null);
 
         const result = await userService.login(credentials);
-        
+
         jest.clearAllMocks();
 
         expect(result.isSuccess).toEqual(false);

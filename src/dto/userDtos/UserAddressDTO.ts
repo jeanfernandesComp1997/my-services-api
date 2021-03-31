@@ -1,4 +1,4 @@
-import { Address } from '../../entities/Address';
+import { AddressDTO } from "./AddressDTO";
 
 export class UserAddressDTO {
     id: string;
@@ -8,7 +8,7 @@ export class UserAddressDTO {
     document: string;
     corporateDocument: string;
     corporateName: string;
-    address: Address;
+    address: Array<AddressDTO>;
 
     constructor(props) {
         this.id = props.userId;
@@ -17,16 +17,19 @@ export class UserAddressDTO {
         this.password = props.password;
         this.document = props.document;
         this.corporateName = props.corporateName;
+        this.address = [];
 
-        this.address = new Address({
-            id: props.id,
-            userId: props.userId,
-            country: props.country,
-            state: props.state,
-            city: props.city,
-            neighborhood: props.neighborhood,
-            street: props.street,
-            number: props.number
-        });
+        if (props?.id) {
+            this.address.push(new AddressDTO({
+                id: props.id,
+                userId: props.userId,
+                country: props.country,
+                state: props.state,
+                city: props.city,
+                neighborhood: props.neighborhood,
+                street: props.street,
+                number: props.number
+            }));
+        }
     }
 }

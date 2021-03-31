@@ -1,3 +1,5 @@
+import { UserDTO } from './../../dto/userDtos/UserDTO';
+import { AddressDTO } from './../../dto/userDtos/AddressDTO';
 import { RepositoryExceptions } from './../exceptions/RepositoryException';
 import { UserAddressDTO } from '../../dto/userDtos/UserAddressDTO';
 import { Knex } from 'knex';
@@ -27,7 +29,7 @@ export class UserRepository implements IUserRepository {
         try {
             const result = await this.dbContext('user').where('email', email);
 
-            return result.length > 0 ? new User(result[0]) : null;
+            return result.length > 0 ? User.createUser(result[0]).getValue() : null;
         } catch (error) {
             throw new RepositoryExceptions(error);
         }
@@ -37,7 +39,7 @@ export class UserRepository implements IUserRepository {
         try {
             const result = await this.dbContext('user').where('email', email).where('password', password);
 
-            return result.length > 0 ? new User(result[0]) : null;
+            return result.length > 0 ? User.createUser(result[0]).getValue() : null;
         } catch (error) {
             throw new RepositoryExceptions(error);
         }
@@ -50,7 +52,6 @@ export class UserRepository implements IUserRepository {
                     passwordResetToken: token,
                     passwordResetExpires: expiresIn
                 });
-
         } catch (error) {
             throw new RepositoryExceptions(error);
         }
@@ -62,7 +63,6 @@ export class UserRepository implements IUserRepository {
                 .update({
                     password: password
                 });
-
         } catch (error) {
             throw new RepositoryExceptions(error);
         }
@@ -72,7 +72,7 @@ export class UserRepository implements IUserRepository {
         try {
             await this.dbContext.insert(address).into('address');
 
-            return new Address(address);
+            return address;
         } catch (error) {
             throw new RepositoryExceptions(error);
         }
@@ -80,9 +80,19 @@ export class UserRepository implements IUserRepository {
 
     async findAll(): Promise<Array<UserAddressDTO>> {
         try {
-            const result = await this.dbContext.from('user').leftJoin('address', 'user.id', 'address.userId');
+            const result = await this.dbContext.select(['user.*', 'address.*', 'user.id as userId']).table('user').leftJoin('address', 'user.id', 'address.userId');
+            let userAddress: Array<UserAddressDTO> = [];
 
-            return result.map(user => new UserAddressDTO(user));
+            result.forEach(item => {
+                let user = userAddress.find(element => element.id === item.userId);
+                if (user)
+                    user.address.push(new AddressDTO(item));
+                else
+                    userAddress.push(new UserAddressDTO(item));
+            });
+
+            return userAddress;
+            //return result.map(user => new UserAddressDTO(user));
         } catch (error) {
             throw new RepositoryExceptions(error);
         }

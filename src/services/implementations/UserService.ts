@@ -8,7 +8,7 @@ import { User } from './../../entities/User';
 import { IUserRepository } from '../../repositories/IUserRepository';
 import { IUserService } from './../IUserService';
 import { IMailProvider } from '../../providers/IMailProvider';
-import 'dotenv/config'
+import 'dotenv/config';
 
 export class UserService implements IUserService {
     constructor(
@@ -17,17 +17,17 @@ export class UserService implements IUserService {
     ) { }
 
     async addUser(obj: any): Promise<Result<User>> {
-        const user = new User(obj);
+        const resultUser = User.createUser(obj);
 
-        if (await this.userRepository.userExist(user.email))
+        if (!resultUser.isSuccess)
+            return Result.fail<User>(resultUser.error);
+
+        const user = resultUser.getValue();
+
+        if (await this.userRepository.userExist(user._email))
             return Result.fail<User>('Email already in use!');
 
-        if (user._errors.length > 0)
-            return Result.fail<User>(user._errors.toString());
-
-        delete user._errors;
-
-        user.password = JSON.stringify(encrypt(user.password));
+        user.setPassword(JSON.stringify(encrypt(user._password)));
 
         const result = await this.userRepository.saveUser(user);
 
@@ -45,10 +45,10 @@ export class UserService implements IUserService {
         if (!user)
             return Result.fail<Credentials>('Sorry, this email is invalid.');
 
-        const userPassword = decrypt(JSON.parse(user.password));
+        const userPassword = decrypt(JSON.parse(user._password));
 
         if (user && userPassword === password) {
-            const accesToken = await jwt.sign({ email: user.email }, process.env.SECRET, {
+            const accesToken = await jwt.sign({ email: user._email }, process.env.SECRET, {
                 expiresIn: 43200
             });
 
@@ -75,7 +75,7 @@ export class UserService implements IUserService {
         const now = new Date();
         now.setHours(now.getHours() + 1);
 
-        await this.userRepository.updatePasswordResetToken(user.email, token, now);
+        await this.userRepository.updatePasswordResetToken(user._email, token, now);
 
         try {
             await this.mailProvider.sendMail({
@@ -84,8 +84,8 @@ export class UserService implements IUserService {
                     email: 'noreply@myservice.com',
                 },
                 from: {
-                    name: user.name,
-                    email: user.email,
+                    name: user._name,
+                    email: user._email,
                 },
                 subject: 'Recuperação de senha',
                 body: `<p>Olá, use o seguinte token para alterar sua senha: ${token}</p>`
@@ -94,7 +94,7 @@ export class UserService implements IUserService {
             return Result.fail<any>('Error send email with reset token!');
         }
 
-        return Result.ok<any>({ message: `Email successfully sent to ${user.email}` });
+        return Result.ok<any>({ message: `Email successfully sent to ${user._email}` });
     }
 
     async resetPassword(email: string, password: string, token: string): Promise<Result<any>> {
@@ -108,9 +108,9 @@ export class UserService implements IUserService {
 
         const now = new Date();
 
-        if (user.passwordResetToken === token && now < new Date(user.passwordResetExpires)) {
-            await this.userRepository.updatePassword(user.email, JSON.stringify(encrypt(password)));
-            await this.userRepository.updatePasswordResetToken(user.email, null, null);
+        if (user._passwordResetToken === token && now < new Date(user._passwordResetExpires)) {
+            await this.userRepository.updatePassword(user._email, JSON.stringify(encrypt(password)));
+            await this.userRepository.updatePasswordResetToken(user._email, null, null);
         }
         else
             return Result.fail<any>('Invalid Token!');
@@ -119,15 +119,15 @@ export class UserService implements IUserService {
     }
 
     async addAddress(obj: any): Promise<Result<Address>> {
-        const address = new Address(obj);
+        const resultAddress = Address.createAddress(obj);
 
-        if (await this.userRepository.userExist(address.userId))
+        if (!resultAddress.isSuccess)
+            return Result.fail<Address>(resultAddress.error);
+
+        const address = resultAddress.getValue();
+
+        if (await this.userRepository.userExist(address._userId))
             return Result.fail<Address>('UserId invalid invalid!');
-
-        if (address._errors.length > 0)
-            return Result.fail<Address>(address._errors.toString());
-
-        delete address._errors;
 
         const result = await this.userRepository.saveAddress(address);
 

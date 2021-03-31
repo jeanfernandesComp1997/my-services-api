@@ -1,5 +1,5 @@
 import { knex } from 'knex';
-import 'dotenv/config'
+import 'dotenv/config';
 
 const config = {
     client: 'mysql2',

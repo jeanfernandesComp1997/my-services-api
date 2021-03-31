@@ -1,42 +1,76 @@
-import { EntityBase } from './EntityBase';
+import { EntityBase, ParamsTypes } from './base/EntityBase';
+import { EntityResult } from './result/EntityResult';
 
-export class Address extends EntityBase {
-    userId: string;
-    country: string;
-    state: string;
-    city: string;
-    neighborhood: string;
-    street: string;
-    number: string;
+export class Address extends EntityBase<Address> {
+    private userId: string;
+    get _userId(): string { return this.userId }
 
-    constructor(props) {
+    private country: string;
+    get _country(): string { return this.country }
+
+    private state: string;
+    get _state(): string { return this.state }
+
+    private city: string;
+    get _city(): string { return this.city }
+
+    private neighborhood: string;
+    get _neighborhood(): string { return this.neighborhood }
+
+    private street: string;
+    get _street(): string { return this.street }
+
+    private number: string;
+    get _number(): string { return this.number }
+
+    private constructor(props) {
         super(props.id ? props.id : null);
 
         Object.assign(this, props);
-
-        this.validate();
     }
 
-    validate() {
-        if (this.userId === '' || this.userId === null || this.userId === undefined)
-            this._errors.push('UserId is required!');
+    static createAddress(props): EntityResult<Address> {
+        const validateResult = this.validateParameters([
+            {
+                keyName: 'userId',
+                type: ParamsTypes.string,
+                value: props?.userId
+            },
+            {
+                keyName: 'country',
+                type: ParamsTypes.string,
+                value: props?.country
+            },
+            {
+                keyName: 'state',
+                type: ParamsTypes.string,
+                value: props?.state
+            },
+            {
+                keyName: 'city',
+                type: ParamsTypes.string,
+                value: props?.city
+            },
+            {
+                keyName: 'neighborhood',
+                type: ParamsTypes.string,
+                value: props?.neighborhood
+            },
+            {
+                keyName: 'street',
+                type: ParamsTypes.string,
+                value: props?.street
+            },
+            {
+                keyName: 'number',
+                type: ParamsTypes.string,
+                value: props?.number
+            },
+        ]);
 
-        if (this.country === '' || this.country === null || this.country === undefined)
-            this._errors.push('Country is required!');
+        if (!validateResult.isSuccess)
+            return EntityResult.fail<Address>(validateResult.notifications);
 
-        if (this.state === '' || this.state === null || this.state === undefined)
-            this._errors.push('State is required!');
-
-        if (this.city === '' || this.city === null || this.city === undefined)
-            this._errors.push('City is required!');
-
-        if (this.neighborhood === '' || this.neighborhood === null || this.neighborhood === undefined)
-            this._errors.push('Neighborhood is required!');
-
-        if (this.street === '' || this.street === null || this.street === undefined)
-            this._errors.push('Street is required!');
-
-        if (this.number === '' || this.number === null || this.number === undefined)
-            this._errors.push('Number is required!');
+        return EntityResult.ok<Address>(new Address(props));
     }
 }

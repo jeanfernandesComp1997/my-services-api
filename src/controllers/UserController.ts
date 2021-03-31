@@ -82,7 +82,7 @@ export class UserController {
                 return response.status(400).send(result.error);
         } catch (error) {
             return response.status(400).json({
-                message: error.name || 'Unexpected error.'
+                message: error.message || 'Unexpected error.'
             });
         }
     }

@@ -11,7 +11,6 @@ export class MailProvider implements IMailProvider {
     private user: any;
     private pass: any;
 
-
     constructor() {
         this.host = process.env.SMTP_HOST
         this.port = process.env.SMTP_PORT
