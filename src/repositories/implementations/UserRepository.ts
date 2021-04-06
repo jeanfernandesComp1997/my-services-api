@@ -1,7 +1,6 @@
 import { UserDTO } from './../../dto/userDtos/UserDTO';
 import { AddressDTO } from './../../dto/userDtos/AddressDTO';
 import { RepositoryExceptions } from './../exceptions/RepositoryException';
-import { UserAddressDTO } from '../../dto/userDtos/UserAddressDTO';
 import { Knex } from 'knex';
 import { Address } from '../../entities/Address';
 import { context } from '../database/DataContext';
@@ -78,21 +77,24 @@ export class UserRepository implements IUserRepository {
         }
     }
 
-    async findAll(): Promise<Array<UserAddressDTO>> {
+    async findAll(): Promise<Array<UserDTO>> {
         try {
-            const result = await this.dbContext.select(['user.*', 'address.*', 'user.id as userId']).table('user').leftJoin('address', 'user.id', 'address.userId');
-            let userAddress: Array<UserAddressDTO> = [];
+            const result = await this.dbContext.select(['user.*', 'address.*', 'user.id as userId'])
+                .table('user')
+                .leftJoin('address', 'user.id', 'address.userId');
 
-            result.forEach(item => {
-                let user = userAddress.find(element => element.id === item.userId);
-                if (user)
-                    user.address.push(new AddressDTO(item));
-                else
-                    userAddress.push(new UserAddressDTO(item));
-            });
-
-            return userAddress;
             //return result.map(user => new UserAddressDTO(user));
+
+            const users = result.reduce((newArr, current, index, original) => {
+                if (newArr[current.userId]) {
+                    newArr[current.userId].address.push(new AddressDTO(current));
+                    return { ...newArr };
+                }
+
+                return { ...newArr, [current.userId]: new UserDTO(current) };
+            }, {});
+
+            return Object.values(users);
         } catch (error) {
             throw new RepositoryExceptions(error);
         }

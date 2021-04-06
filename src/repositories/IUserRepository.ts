@@ -1,6 +1,6 @@
 import { Address } from './../entities/Address';
 import { User } from "../entities/User";
-import { UserAddressDTO } from '../dto/userDtos/UserAddressDTO';
+import { UserDTO } from '../dto/userDtos/UserDTO';
 
 export interface IUserRepository {
     saveUser(user): Promise<User>;
@@ -9,5 +9,5 @@ export interface IUserRepository {
     updatePasswordResetToken(email: string, token: string, expiresIn: Date): Promise<void>;
     updatePassword(email: string, password: string): Promise<void>;
     saveAddress(address: Address): Promise<Address>;
-    findAll(): Promise<Array<UserAddressDTO>>;
+    findAll(): Promise<Array<UserDTO>>;
 }
