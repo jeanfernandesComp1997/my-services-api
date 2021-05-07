@@ -1,8 +1,8 @@
-jest.mock('./../../src/repositories/implementations/UserRepository');
-import { UserService } from './../../src/services/implementations/UserService';
-import { MailProvider } from './../../src/providers/implements/MailProvider';
-import { UserRepository } from './../../src/repositories/implementations/UserRepository';
-import { User } from '../../src/entities/User';
+import { User } from './../../src/domain/entities/User';
+import { MailProvider } from './../../src/infra/providers/implements/MailProvider';
+import { UserRepository } from './../../src/infra/repositories/implementations/UserRepository';
+import { UserService } from './../../src/domain/services/implementations/UserService';
+jest.mock('./../../src/infra/repositories/implementations/UserRepository');
 
 describe('User service testes', () => {
     const userRepository = new UserRepository();

@@ -1,13 +1,13 @@
-import { encrypt, decrypt } from './../../middlewares/Crypt';
 import { Credentials } from './../../entities/Credentials';
 import { Result } from './../result/Result';
 import * as jwt from 'jsonwebtoken';
 import * as crypto from 'crypto';
 import { Address } from './../../entities/Address';
 import { User } from './../../entities/User';
-import { IUserRepository } from '../../repositories/IUserRepository';
 import { IUserService } from './../IUserService';
-import { IMailProvider } from '../../providers/IMailProvider';
+import { IUserRepository } from '../../../infra/repositories/IUserRepository';
+import { IMailProvider } from '../../../infra/providers/IMailProvider';
+import { decrypt, encrypt } from '../../libs/Crypt';
 import 'dotenv/config';
 
 export class UserService implements IUserService {

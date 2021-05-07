@@ -1,6 +1,6 @@
-import { Address } from './../entities/Address';
-import { User } from "../entities/User";
-import { UserDTO } from '../dto/userDtos/UserDTO';
+import { Address } from './../../domain/entities/Address';
+import { User } from "../../domain/entities/User";
+import { UserDTO } from '../../domain/dto/userDtos/UserDTO';
 
 export interface IUserRepository {
     saveUser(user): Promise<User>;

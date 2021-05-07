@@ -1,6 +1,6 @@
-import { verifyJwt } from '../middlewares/AuthService';
 import { userController } from './../controllers/';
 import { Router } from "express";
+import { verifyJwt } from '../middlewares/AuthService';
 
 const userRoute = Router();
 
@@ -24,7 +24,7 @@ userRoute.post('/addaddress', verifyJwt, async (request, response) => {
     return await userController.addAddress(request, response);
 });
 
-userRoute.get('/', verifyJwt, async (request, response) => {
+userRoute.get('/', /*verifyJwt,*/ async (request, response) => {
     return await userController.getAllUsers(request, response);
 });
 

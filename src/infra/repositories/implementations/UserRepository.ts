@@ -1,11 +1,11 @@
-import { UserDTO } from './../../dto/userDtos/UserDTO';
-import { AddressDTO } from './../../dto/userDtos/AddressDTO';
+import { Address } from './../../../domain/entities/Address';
 import { RepositoryExceptions } from './../exceptions/RepositoryException';
 import { Knex } from 'knex';
-import { Address } from '../../entities/Address';
 import { context } from '../database/DataContext';
-import { User } from './../../entities/User';
 import { IUserRepository } from './../IUserRepository';
+import { User } from '../../../domain/entities/User';
+import { UserDTO } from '../../../domain/dto/userDtos/UserDTO';
+import { AddressDTO } from '../../../domain/dto/userDtos/AddressDTO';
 
 export class UserRepository implements IUserRepository {
     dbContext: Knex;
@@ -85,13 +85,11 @@ export class UserRepository implements IUserRepository {
 
             //return result.map(user => new UserAddressDTO(user));
 
-            const users = result.reduce((newArr, current, index, original) => {
-                if (newArr[current.userId]) {
+            const users = result.reduce((newArr, current) => {
+                if (newArr[current.userId])
                     newArr[current.userId].address.push(new AddressDTO(current));
-                    return { ...newArr };
-                }
-
-                return { ...newArr, [current.userId]: new UserDTO(current) };
+                else
+                    newArr[current.userId] = new UserDTO(current)
             }, {});
 
             return Object.values(users);
