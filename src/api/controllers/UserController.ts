@@ -1,14 +1,12 @@
 import { Response, Request } from 'express';
 import { ICreateUserRequestDTO } from '../../domain/dto/userDtos/ICreateUserRequestDTO';
 import { IUserService } from '../../domain/services/IUserService';
-import { ITestRepository } from '../../infra/repositories/ITestRepository';
 import { IUserRepository } from '../../infra/repositories/IUserRepository';
 
 export class UserController {
     constructor(
         private userRepository: IUserRepository,
         private userService: IUserService,
-        private testRepository: ITestRepository
     ) { }
 
     async addUser(request: Request, response: Response): Promise<Response> {
@@ -103,7 +101,6 @@ export class UserController {
     async getAllUsers(request: Request, response: Response): Promise<Response> {
         try {
             const users = await this.userRepository.findAll();
-            //const test = this.testRepository.getId();
 
             return response.status(200).send(users);
         } catch (error) {
