@@ -1,4 +1,5 @@
 import { Response, Request } from 'express';
+import { ICreateUserRequestDTO } from '../../domain/dto/userDtos/ICreateUserRequestDTO';
 import { IUserService } from '../../domain/services/IUserService';
 import { ITestRepository } from '../../infra/repositories/ITestRepository';
 import { IUserRepository } from '../../infra/repositories/IUserRepository';
@@ -11,8 +12,18 @@ export class UserController {
     ) { }
 
     async addUser(request: Request, response: Response): Promise<Response> {
+        const { name, email, password, document, corporateDocument, corporateName } = request.body;
+        const createUserRequest: ICreateUserRequestDTO = {
+            name: name,
+            email: email,
+            password: password,
+            document: document,
+            corporateDocument: corporateDocument,
+            corporateName: corporateName
+        }
+
         try {
-            const result = await this.userService.addUser(request.body);
+            const result = await this.userService.addUser(createUserRequest);
 
             if (result.isSuccess)
                 return response.status(201).send(result.getValue());

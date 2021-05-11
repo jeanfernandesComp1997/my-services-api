@@ -9,6 +9,7 @@ import { IUserRepository } from '../../../infra/repositories/IUserRepository';
 import { IMailProvider } from '../../../infra/providers/IMailProvider';
 import { decrypt, encrypt } from '../../libs/Crypt';
 import 'dotenv/config';
+import { ICreateUserRequestDTO } from '../../dto/userDtos/ICreateUserRequestDTO';
 
 export class UserService implements IUserService {
     constructor(
@@ -16,7 +17,7 @@ export class UserService implements IUserService {
         private mailProvider: IMailProvider
     ) { }
 
-    async addUser(obj: any): Promise<Result<User>> {
+    async addUser(obj: ICreateUserRequestDTO): Promise<Result<User>> {
         const resultUser = User.createUser(obj);
 
         if (!resultUser.isSuccess)
