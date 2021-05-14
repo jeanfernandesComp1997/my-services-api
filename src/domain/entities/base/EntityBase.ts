@@ -3,7 +3,7 @@ const { v4: idGen } = require('uuid')
 export abstract class EntityBase<T> {
     protected readonly id: string;
 
-    constructor(id?) {
+    constructor(id?: any) {
         if (id)
             this.id = id;
         else

@@ -8,7 +8,7 @@ export class AddressDTO {
     street: string;
     number: string;
 
-    constructor(props) {
+    constructor(props: any) {
         this.id = props.id;
         this.userId = props.userId;
         this.country = props.country;

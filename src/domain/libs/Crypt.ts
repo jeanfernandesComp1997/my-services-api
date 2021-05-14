@@ -2,7 +2,7 @@ import * as crypto from 'crypto';
 import 'dotenv/config'
 
 const IV_LENGTH = crypto.randomBytes(16);
-const ENCRYPTION_KEY = process.env.SECRET32BYTE;
+const ENCRYPTION_KEY = process.env?.SECRET32BYTE ?? "";
 
 export const encrypt = (value: string) => {
     const cipher = crypto.createCipheriv('aes-256-ctr', ENCRYPTION_KEY, IV_LENGTH);
@@ -14,7 +14,7 @@ export const encrypt = (value: string) => {
     };
 };
 
-export const decrypt = (hash) => {
+export const decrypt = (hash: any) => {
     const decipher = crypto.createDecipheriv('aes-256-ctr', ENCRYPTION_KEY, Buffer.from(hash.iv, 'hex'));
     const decrpyted = Buffer.concat([decipher.update(Buffer.from(hash.content, 'hex')), decipher.final()]);
 

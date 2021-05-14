@@ -3,7 +3,7 @@ export class Result<T>{
     public error: any;
     private _value: T;
 
-    private constructor(isSuccess: boolean, error?: string, value?: T) {
+    private constructor(isSuccess: boolean, error?: string, value?: T | any) {
         if (isSuccess && error) {
             throw new Error(`InvalidOperation: A result cannot be 
             successful and contain an error`);
@@ -29,7 +29,7 @@ export class Result<T>{
     }
 
     public static ok<U>(value?: U): Result<U> {
-        return new Result<U>(true, null, value);
+        return new Result<U>(true, "", value);
     }
 
     public static fail<U>(error: string): Result<U> {

@@ -10,12 +10,13 @@ export class UserDTO {
     corporateName: string;
     address: Array<AddressDTO>;
 
-    constructor(props) {
+    constructor(props: any) {
         this.id = props.userId;
         this.name = props.name;
         this.email = props.email;
         this.password = props.password;
         this.document = props.document;
+        this.corporateDocument = props.corporateDocument;
         this.corporateName = props.corporateName;
         this.address = [];
 

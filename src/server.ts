@@ -12,7 +12,7 @@ server.on('error', onError);
 server.on('listening', onListening);
 console.log(`API rodando na porta ${port}`);
 
-function normalizePort(val) {
+function normalizePort(val: string) {
     const port = parseInt(val, 10);
 
     if (isNaN(port))
@@ -24,7 +24,7 @@ function normalizePort(val) {
     return false;
 }
 
-function onError(error) {
+function onError(error: any) {
     if (error.syscall !== 'listen')
         return error;
 
@@ -36,11 +36,9 @@ function onError(error) {
         case 'EACCES':
             console.error(bind + ' requires elevated privilegies');
             process.exit(1);
-            break;
         case 'EADDRINUSE':
             console.error(bind + ' is already in use');
             process.exit(1);
-            break;
         default:
             throw error;
     }
@@ -50,6 +48,6 @@ function onListening() {
     const addr = server.address();
     const bind = typeof addr === 'string' ?
         'pipe ' + addr :
-        'port ' + addr.port;
+        'port ' + addr?.port;
     debug('Listening on ' + bind);
 }

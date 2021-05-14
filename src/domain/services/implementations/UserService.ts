@@ -49,7 +49,7 @@ export class UserService implements IUserService {
         const userPassword = decrypt(JSON.parse(user._password));
 
         if (user && userPassword === password) {
-            const accesToken = await jwt.sign({ email: user._email }, process.env.SECRET, {
+            const accesToken = await jwt.sign({ email: user._email }, process.env?.SECRET ?? "", {
                 expiresIn: 43200
             });
 
@@ -111,7 +111,7 @@ export class UserService implements IUserService {
 
         if (user._passwordResetToken === token && now < new Date(user._passwordResetExpires)) {
             await this.userRepository.updatePassword(user._email, JSON.stringify(encrypt(password)));
-            await this.userRepository.updatePasswordResetToken(user._email, null, null);
+            await this.userRepository.updatePasswordResetToken(user._email);
         }
         else
             return Result.fail<any>('Invalid Token!');

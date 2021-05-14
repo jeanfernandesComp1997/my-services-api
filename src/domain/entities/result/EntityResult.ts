@@ -1,9 +1,9 @@
 export class EntityResult<T>{
     public isSuccess: boolean;
-    public error: any;
+    public error: string;
     private _value: T;
 
-    private constructor(isSuccess: boolean, error?: string, value?: T) {
+    private constructor(isSuccess: boolean, error?: string, value?: T | any) {
         if (isSuccess && error) {
             throw new Error(`InvalidOperation: A result cannot be 
             successful and contain an error`);
@@ -14,7 +14,7 @@ export class EntityResult<T>{
         }
 
         this.isSuccess = isSuccess;
-        this.error = error;
+        this.error = error ? error : "";
         this._value = value;
 
         Object.freeze(this);
@@ -29,7 +29,7 @@ export class EntityResult<T>{
     }
 
     public static ok<U>(value?: U): EntityResult<U> {
-        return new EntityResult<U>(true, null, value);
+        return new EntityResult<U>(true, "", value);
     }
 
     public static fail<U>(error: string): EntityResult<U> {

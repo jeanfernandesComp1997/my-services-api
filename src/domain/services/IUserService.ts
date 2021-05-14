@@ -6,7 +6,7 @@ import { ICreateUserRequestDTO } from '../dto/userDtos/ICreateUserRequestDTO';
 
 export interface IUserService {
     addUser(user: ICreateUserRequestDTO): Promise<Result<User>>;
-    login(credentials): Promise<Result<Credentials>>;
+    login(credentials: any): Promise<Result<Credentials>>;
     forgotPassword(email: string): Promise<Result<any>>;
     resetPassword(email: string, password: string, token: string): Promise<Result<any>>;
     addAddress(address: Address): Promise<Result<Address>>;

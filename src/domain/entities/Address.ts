@@ -2,34 +2,34 @@ import { EntityBase, ParamsTypes } from './base/EntityBase';
 import { EntityResult } from './result/EntityResult';
 
 export class Address extends EntityBase<Address> {
-    private userId: string;
+    private userId!: string;
     get _userId(): string { return this.userId }
 
-    private country: string;
+    private country!: string;
     get _country(): string { return this.country }
 
-    private state: string;
+    private state!: string;
     get _state(): string { return this.state }
 
-    private city: string;
+    private city!: string;
     get _city(): string { return this.city }
 
-    private neighborhood: string;
+    private neighborhood!: string;
     get _neighborhood(): string { return this.neighborhood }
 
-    private street: string;
+    private street!: string;
     get _street(): string { return this.street }
 
-    private number: string;
+    private number!: string;
     get _number(): string { return this.number }
 
-    private constructor(props) {
+    private constructor(props: any) {
         super(props.id ? props.id : null);
 
         Object.assign(this, props);
     }
 
-    static createAddress(props): EntityResult<Address> {
+    static createAddress(props: any): EntityResult<Address> {
         const validateResult = this.validateParameters([
             {
                 keyName: 'userId',

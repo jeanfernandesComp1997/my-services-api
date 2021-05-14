@@ -1,8 +1,8 @@
 export class Credentials {
-    token: string;
-    expiresIn: string;
+    token!: string;
+    expiresIn!: string;
 
-    constructor(props) {
+    constructor(props: any) {
         Object.assign(this, props);
     }
 }

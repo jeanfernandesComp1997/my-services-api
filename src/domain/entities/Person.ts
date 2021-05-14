@@ -1,33 +1,33 @@
 import { EntityBase } from './base/EntityBase';
 
 export abstract class Person extends EntityBase<Person> {
-    private name: string;
+    private name!: string;
     get _name(): string { return this.name }
 
-    private email: string;
+    private email!: string;
     get _email(): string { return this.email }
 
-    private password: string;
+    private password!: string;
     get _password(): string { return this.password }
 
-    private document: string;
+    private document!: string;
     get _document(): string { return this.document }
 
-    private corporateDocument: string;
+    private corporateDocument!: string;
     get _corporateDocument(): string { return this.corporateDocument }
 
-    private corporateName: string;
+    private corporateName!: string;
     get _corporateName(): string { return this.corporateName }
 
-    private passwordResetToken: string;
+    private passwordResetToken!: string;
     get _passwordResetToken(): string { return this.passwordResetToken }
 
-    private passwordResetExpires: Date;
+    private passwordResetExpires!: Date;
     get _passwordResetExpires(): Date { return this.passwordResetExpires }
 
-    constructor(props) {
+    constructor(props: any) {
         super(props.id ? props.id : null);
-
+        
         Object.assign(this, props);
     }
 
