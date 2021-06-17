@@ -11,7 +11,7 @@ export abstract class EntityBase<T> {
     }
 
     protected static validateParameters(params: Array<ParamsValidate>): ResultValidate {
-        let notifications: Array<string> = [];
+        const notifications: Array<string> = [];
 
         params.forEach(param => {
             switch (param.type) {
@@ -25,7 +25,7 @@ export abstract class EntityBase<T> {
             }
         });
 
-        let result: ResultValidate = {
+        const result: ResultValidate = {
             isSuccess: notifications.length > 0 ? false : true,
             notifications: notifications.toString()
         };

@@ -1,7 +1,7 @@
 import { Response, Request } from 'express';
-import { ICreateUserRequestDTO } from '../../domain/dto/userDtos/ICreateUserRequestDTO';
-import { IUserService } from '../../domain/services/IUserService';
-import { IUserRepository } from '../../infra/repositories/IUserRepository';
+import { ICreateUserRequestDTO } from '../domain/dto/userDtos/ICreateUserRequestDTO';
+import { IUserService } from '../domain/services/IUserService';
+import { IUserRepository } from '../infra/repositories/IUserRepository';
 
 export class UserController {
     constructor(

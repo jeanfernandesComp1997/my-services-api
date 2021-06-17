@@ -5,8 +5,9 @@
   "main": "index.js",
   "scripts": {
     "dev": "ts-node-dev ./src/server.ts",
-    "start": "ts-node ./src/server.ts",
-    "test": "jest --no-cache --verbose"
+    "start": "node ./build/src/server.js",
+    "test": "jest --no-cache --verbose",
+    "build": "tsc --build"
   },
   "keywords": [],
   "author": "",
