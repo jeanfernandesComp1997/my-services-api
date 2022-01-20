@@ -8,3 +8,4 @@ build
 
 #files
 .env
+package-lock.json
